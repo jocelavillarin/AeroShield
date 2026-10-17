@@ -494,7 +494,23 @@
     modalCloseBtn: document.getElementById('modalCloseBtn'),
     modalCancelBtn: document.getElementById('modalCancelBtn'),
     modalConfirmBtn: document.getElementById('modalConfirmBtn'),
-    toastContainer: document.getElementById('toastContainer')
+    toastContainer: document.getElementById('toastContainer'),
+
+    // Slide 6: Surprise Challenge 15 Failed Logins
+    surpriseChallengeBtn: document.getElementById('surpriseChallengeBtn'),
+    challengeTimelineList: document.getElementById('challengeTimelineList'),
+    enforceControlsBtn: document.getElementById('enforceControlsBtn'),
+    resetControlsBtn: document.getElementById('resetControlsBtn'),
+    wafStatusText: document.getElementById('wafStatusText'),
+    portStatusText: document.getElementById('portStatusText'),
+    accountLockText: document.getElementById('accountLockText'),
+    defenseStateBadge: document.getElementById('defenseStateBadge'),
+    downloadForensicDossierBtn: document.getElementById('downloadForensicDossierBtn'),
+    viewChallengeAuditBtn: document.getElementById('viewChallengeAuditBtn'),
+    failedAttemptCounter: document.getElementById('failedAttemptCounter'),
+
+    // Slide 7: Presentation & Rubric Guide
+    printDefenseDocBtn: document.getElementById('printDefenseDocBtn')
   };
 
   // ==========================================================================
@@ -510,6 +526,7 @@
     renderThreats();
     renderAuditLogs();
     renderPrivilegeScanner();
+    renderFailedLoginsChallenge();
     setupEventHandlers();
   }
 
@@ -555,7 +572,9 @@
       threats: "4. Threat Monitoring & Active Responses",
       audit: "5. Immutable Aviation Database Audit Trail",
       privileges: "Original Feature #1 • Least-Privilege & RBAC Scanner",
-      "airport-map": "Original Feature #2 • Interactive Airport Network-Zone Matrix"
+      "airport-map": "Original Feature #2 • Interactive Airport Network-Zone Matrix",
+      "failed-logins": "Surprise Challenge • 15 Failed Logins Response (Slide 6)",
+      "submission-guide": "Project Submission & Defense Guide • 100 Points Rubric (Slide 7)"
     };
 
     if (elements.pageTitle) {
@@ -1309,10 +1328,206 @@
   }
 
   // ==========================================================================
+  // SURPRISE CHALLENGE: 15 FAILED LOGINS LOGIC (Slide 6)
+  // ==========================================================================
+  const FAILED_LOGIN_ATTEMPTS = [
+    { seq: 1, time: "03:13:23 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'aviation2024!')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 2, time: "03:13:26 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'dispatch1234')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 3, time: "03:13:29 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'kord_tower99')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 4, time: "03:13:31 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'flightops#1')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 5, time: "03:13:34 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'boeing777admin')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 6, time: "03:13:37 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'runway09L')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 7, time: "03:13:40 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'delta_echo_mike')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 8, time: "03:13:43 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'dispatch_master_root')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 9, time: "03:13:46 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'chen_flight99')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 10, time: "03:13:49 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'airport2026!')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 11, time: "03:13:52 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'admin_gate_c12')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 12, time: "03:13:55 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'atc_clearance!')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 13, time: "03:13:58 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'chicago_tower')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 14, time: "03:14:01 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'pilot_in_command')", error: "AUTH_FAILED_BAD_CREDENTIAL" },
+    { seq: 15, time: "03:14:05 UTC", ip: "192.168.42.88", user: "capt.chen", probe: "auth('capt.chen', 'oracle_flight_ops')", error: "THRESHOLD_BREACH_15_FAILS" }
+  ];
+
+  function renderFailedLoginsChallenge() {
+    if (!elements.challengeTimelineList) return;
+    elements.challengeTimelineList.innerHTML = '';
+
+    FAILED_LOGIN_ATTEMPTS.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'timeline-entry failed';
+      row.innerHTML = `
+        <div>
+          <strong style="color: var(--accent-danger);">#${item.seq}</strong>
+          <span style="font-family: var(--font-mono); color: var(--text-muted); margin-left: 0.35rem;">${item.time}</span>
+          <span style="color: #fff; margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.72rem;">${escapeHtml(item.probe)}</span>
+        </div>
+        <div>
+          <span class="severity-pill critical" style="font-size: 0.65rem;">FAILED</span>
+        </div>
+      `;
+      elements.challengeTimelineList.appendChild(row);
+    });
+  }
+
+  function enforceFailedLoginsDefense() {
+    // 1. Update WAF status
+    if (elements.wafStatusText) {
+      elements.wafStatusText.textContent = "ACTIVE DROP (192.168.42.88 DROPPED BY WAF)";
+      elements.wafStatusText.style.color = "var(--accent-teal)";
+    }
+    // 2. Update Port status
+    if (elements.portStatusText) {
+      elements.portStatusText.textContent = "ISOLATED (Gi1/0/14 DISABLED VIA 802.1X)";
+      elements.portStatusText.style.color = "var(--accent-teal)";
+    }
+    // 3. Update Account status
+    if (elements.accountLockText) {
+      elements.accountLockText.textContent = "LOCKED (MFA Re-Auth Required)";
+      elements.accountLockText.style.color = "var(--accent-danger)";
+    }
+    // 4. Update Badge
+    if (elements.defenseStateBadge) {
+      elements.defenseStateBadge.textContent = "DEFENSE ENFORCED (VLAN 999)";
+      elements.defenseStateBadge.className = "badge-safe";
+    }
+
+    // Add firewall rule
+    const ruleExists = state.firewallRules.some(r => r.id === 'FW-RULE-999');
+    if (!ruleExists) {
+      state.firewallRules.unshift({
+        id: "FW-RULE-999",
+        origin: "IP: 192.168.42.88 (Gate C-12 Rogue)",
+        target: "flight_dispatch_master",
+        portProtocol: "TCP / ANY",
+        payload: "All Ingress Traffic",
+        state: "Dynamic Quarantine",
+        action: "PERMANENT DROP"
+      });
+    }
+
+    // Lock Capt. Chen account
+    const u = state.users.find(x => x.id === 'AV-1092');
+    if (u) {
+      u.status = 'Suspended';
+      u.riskScore = 85;
+    }
+
+    // Mitigate Threat
+    const t = state.threats.find(x => x.id === 'THREAT-9938');
+    if (t) {
+      t.status = 'MITIGATED';
+      t.mitigated = true;
+    }
+
+    // Log in Audit Vault
+    logAuditAction('WAF_AIRSHIELD', 'NETWORK_SECURITY', 'Automated Defense: Dropped IP 192.168.42.88 & shut down switch port Gi1/0/14 after 15 failed logins', 'ALLOWED', 'Dynamic Brute-Force Rate Limiting Triggered');
+    logAuditAction('IAM_POLICY_GUARD', 'IDENTITY_CONTROLLER', 'Emergency Account Lockout applied to capt.chen (AV-1092)', 'ALLOWED', 'Account threshold violation mitigation');
+
+    renderNetwork();
+    renderIAM();
+    renderThreats();
+    renderOverview();
+    renderAuditLogs();
+
+    showToast("Surprise Challenge Defense Enforced: IP dropped, switch port isolated, and account locked.", "success");
+  }
+
+  function resetFailedLoginsDefense() {
+    if (elements.wafStatusText) {
+      elements.wafStatusText.textContent = "PENDING ENFORCEMENT";
+      elements.wafStatusText.style.color = "var(--accent-danger)";
+    }
+    if (elements.portStatusText) {
+      elements.portStatusText.textContent = "ONLINE (EXPOSED)";
+      elements.portStatusText.style.color = "var(--accent-danger)";
+    }
+    if (elements.accountLockText) {
+      elements.accountLockText.textContent = "ACTIVE (UNDER ATTACK)";
+      elements.accountLockText.style.color = "var(--accent-amber)";
+    }
+    if (elements.defenseStateBadge) {
+      elements.defenseStateBadge.textContent = "Controls Ready";
+      elements.defenseStateBadge.className = "badge-safe";
+    }
+
+    const u = state.users.find(x => x.id === 'AV-1092');
+    if (u) {
+      u.status = 'Active';
+      u.riskScore = 12;
+    }
+
+    const t = state.threats.find(x => x.id === 'THREAT-9938');
+    if (t) {
+      t.status = 'OPEN';
+      t.mitigated = false;
+    }
+
+    state.firewallRules = state.firewallRules.filter(r => r.id !== 'FW-RULE-999');
+
+    renderNetwork();
+    renderIAM();
+    renderThreats();
+    renderOverview();
+    renderAuditLogs();
+
+    showToast("Surprise Challenge controls reset to simulated attack baseline.", "info");
+  }
+
+  function downloadForensicDossier() {
+    const report = {
+      incidentId: "INC-2026-9938-BRUTE",
+      timestamp: new Date().toISOString(),
+      threatClassification: "CWE-307: Improper Restriction of Excessive Authentication Attempts",
+      airportFacility: "KORD - Metro Central International Airport",
+      targetEntity: {
+        account: "capt.chen (Capt. James Chen)",
+        role: "Flight Dispatcher",
+        database: "flight_dispatch_master",
+        criticality: "Airside Flight Operations Tier 1"
+      },
+      originatingDevice: {
+        ip: "192.168.42.88",
+        mac: "00:1A:2B:3C:4D:5E",
+        location: "Terminal 2, Concourse C, Gate C-12 Departure Lounge",
+        portId: "Gi1/0/14 (Cisco Catalyst 9300-48P)"
+      },
+      attackSummary: {
+        attemptsTotal: 15,
+        durationSeconds: 42,
+        attackType: "Automated Dictionary Credential Stuffing",
+        attempts: FAILED_LOGIN_ATTEMPTS
+      },
+      mitigationEnforced: {
+        networkDrop: "Active Ingress Token-Bucket Drop",
+        portSecurity: "802.1X Port Isolation / VLAN 999",
+        identityControl: "Emergency Session Termination & MFA Challenge",
+        signatureVerification: "SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    };
+
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `incident_report_15_failed_logins_${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast("Forensic JSON Dossier downloaded successfully.", "success");
+  }
+
+  // ==========================================================================
   // EVENT LISTENERS BINDING
   // ==========================================================================
   function setupEventHandlers() {
     // Top scenario & lockdown buttons
+    if (elements.surpriseChallengeBtn) {
+      elements.surpriseChallengeBtn.addEventListener('click', () => {
+        switchSection('failed-logins');
+      });
+    }
     elements.scenarioBtn.addEventListener('click', triggerViolationScenario);
     elements.lockdownToggleBtn.addEventListener('click', toggleEmergencyLockdown);
     elements.deactivateLockdownBtn.addEventListener('click', toggleEmergencyLockdown);
@@ -1472,6 +1687,31 @@
         }
       );
     });
+
+    // Slide 6 Surprise Challenge Actions
+    if (elements.enforceControlsBtn) {
+      elements.enforceControlsBtn.addEventListener('click', enforceFailedLoginsDefense);
+    }
+    if (elements.resetControlsBtn) {
+      elements.resetControlsBtn.addEventListener('click', resetFailedLoginsDefense);
+    }
+    if (elements.downloadForensicDossierBtn) {
+      elements.downloadForensicDossierBtn.addEventListener('click', downloadForensicDossier);
+    }
+    if (elements.viewChallengeAuditBtn) {
+      elements.viewChallengeAuditBtn.addEventListener('click', () => {
+        switchSection('audit');
+        elements.auditSearchInput.value = '192.168.42.88';
+        renderAuditLogs();
+      });
+    }
+
+    // Slide 7 Presentation & Defense PDF Print
+    if (elements.printDefenseDocBtn) {
+      elements.printDefenseDocBtn.addEventListener('click', () => {
+        window.print();
+      });
+    }
 
     // Help Modal
     elements.quickHelpBtn.addEventListener('click', () => {

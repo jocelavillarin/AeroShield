@@ -1838,6 +1838,9 @@ body {
   .overview-body-grid { grid-template-columns: 1fr; }
   .grid-2-col { grid-template-columns: 1fr; }
   .privilege-summary-grid { grid-template-columns: 1fr; }
+  .challenge-grid-4 { grid-template-columns: 1fr; }
+  .rubric-card-grid { grid-template-columns: 1fr; }
+  .real-system-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
@@ -1847,3 +1850,193 @@ body {
   .metric-cards-grid { grid-template-columns: 1fr; }
   .topbar-actions { flex-direction: column; align-items: stretch; width: 100%; }
 }
+
+/* ==========================================================================
+   SURPRISE CHALLENGE: 15 FAILED LOGINS (Slide 6 Requirements)
+   ========================================================================== */
+.challenge-hero-card {
+  background: linear-gradient(135deg, rgba(255, 69, 96, 0.12) 0%, rgba(19, 34, 71, 0.95) 100%);
+  border: 1px solid var(--accent-danger);
+  border-left: 6px solid var(--accent-danger);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(255, 69, 96, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+.challenge-incident-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--accent-danger);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.6rem;
+}
+
+.challenge-hero-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.5rem;
+}
+
+.challenge-hero-sub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.challenge-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.timeline-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 69, 96, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.timeline-entry.failed {
+  border-left: 3px solid var(--accent-danger);
+}
+
+.control-action-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.control-status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: rgba(14, 25, 52, 0.8);
+  font-size: 0.78rem;
+  border: 1px solid rgba(30, 53, 109, 0.5);
+}
+
+.real-system-box {
+  background: rgba(0, 229, 190, 0.05);
+  border: 1px solid rgba(0, 229, 190, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.real-system-title {
+  color: var(--accent-teal);
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.real-system-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.real-system-item {
+  background: rgba(14, 25, 52, 0.6);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.real-system-item h5 {
+  font-size: 0.85rem;
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+
+.real-system-item p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* ==========================================================================
+   SUBMISSION & RUBRIC (Slide 7 Requirements)
+   ========================================================================== */
+.rubric-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.rubric-score-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.rubric-score-box.perfect {
+  border-top: 3px solid var(--accent-teal);
+}
+
+.rubric-pts {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0.25rem 0;
+}
+
+.speech-script-box {
+  background: #081126;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
+
+.script-minute-row {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(30, 53, 109, 0.4);
+}
+
+.script-minute-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  min-width: 90px;
+}
+

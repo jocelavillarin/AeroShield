@@ -19,6 +19,10 @@
         <span class="sim-desc">IT 414 • Aviation Database Administration | Academic Prototype</span>
       </div>
       <div class="banner-right">
+        <button id="surpriseChallengeBtn" class="btn btn-danger-soft btn-sm" title="Launch Slide 6 Surprise Challenge: 15 Failed Logins Response">
+          <svg class="icon" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Surprise Challenge (15 Logins)
+        </button>
         <button id="scenarioBtn" class="btn btn-warning-soft btn-sm" title="Trigger access violation walkthrough">
           <svg class="icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           Simulate Access Violation
@@ -128,6 +132,20 @@
           <svg class="nav-icon" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
           <span class="nav-label">Airport Zone Matrix</span>
           <span class="nav-pill-new">NEW</span>
+        </button>
+
+        <div class="nav-group-label" style="margin-top: 1.25rem;">SURPRISE CHALLENGE (SLIDE 6)</div>
+        <button class="nav-item" data-section="failed-logins">
+          <svg class="nav-icon text-danger" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span class="nav-label">15 Failed Logins Response</span>
+          <span class="nav-badge alert-count" id="badgeChallengeNav">ACTIVE</span>
+        </button>
+
+        <div class="nav-group-label" style="margin-top: 1.25rem;">SUBMISSION & DEFENSE (SLIDE 7)</div>
+        <button class="nav-item" data-section="submission-guide">
+          <svg class="nav-icon text-cyan" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span class="nav-label">Presentation & Rubric</span>
+          <span class="nav-pill-new" style="background: var(--accent-cyan);">100 PTS</span>
         </button>
       </nav>
 
@@ -886,6 +904,339 @@
               <div class="map-action-btns">
                 <button id="mapQuarantineBtn" class="btn btn-danger btn-sm">Quarantine Gate C-18 Terminal</button>
                 <button id="mapPingBtn" class="btn btn-ghost btn-sm">Ping Node Health</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             SURPRISE CHALLENGE: 15 FAILED LOGINS (Slide 6 Requirements)
+             =================================================================== -->
+        <section id="section-failed-logins" class="dashboard-section">
+          <!-- Slide 6 Hero Incident Card -->
+          <div class="challenge-hero-card">
+            <div class="challenge-incident-badge">
+              <svg class="icon-xs" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              INCIDENT DETECTED
+            </div>
+            <h3 class="challenge-hero-title">15 failed login attempts from an unauthorized device</h3>
+            <p class="challenge-hero-sub">
+              Automated brute-force credential stuffing probe detected against the Airside Flight Dispatch Core database (<code class="code-hl">flight_dispatch_master</code>) via Gate C-12 Departure Lounge Kiosk.
+            </p>
+          </div>
+
+          <!-- Slide 6: Four Required Dashboard Components Grid -->
+          <div class="challenge-grid-4">
+            <!-- 1. Alert Severity and Affected Account -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <span class="badge-tier tier-pnr" style="background: rgba(255, 69, 96, 0.15); color: var(--accent-danger); border-color: var(--accent-danger);">REQUIREMENT #1</span>
+                  <h4 class="panel-title mt-1">ALERT SEVERITY & AFFECTED ACCOUNT</h4>
+                </div>
+                <span class="severity-pill critical">CRITICAL / HIGH PRIORITY</span>
+              </div>
+
+              <div class="threat-meta-box">
+                <div class="meta-row">
+                  <span class="meta-key">Target Account:</span>
+                  <span class="meta-val" style="color: #fff; font-weight: 700;">capt.chen (Capt. James Chen)</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Aviation Role:</span>
+                  <span class="meta-val">Flight Operations Lead / Dispatcher</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Target DB Table:</span>
+                  <span class="meta-val" style="color: var(--accent-cyan);">flight_dispatch_master</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Unauthorized Device:</span>
+                  <span class="meta-val" style="color: var(--accent-danger);">Gate C-12 Public Terminal (192.168.42.88)</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Hardware MAC:</span>
+                  <span class="meta-val">00:1A:2B:3C:4D:5E (Untrusted / Rogue)</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Physical Location:</span>
+                  <span class="meta-val">Terminal 2 Concourse C, Departure Lounge</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Current Risk Score:</span>
+                  <span class="meta-val" style="color: var(--accent-danger); font-weight: 800;">94% (Severe Intrusion Risk)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Event History and Recommended Action -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <span class="badge-tier tier-pnr" style="background: rgba(255, 167, 38, 0.15); color: var(--accent-amber); border-color: var(--accent-amber);">REQUIREMENT #2</span>
+                  <h4 class="panel-title mt-1">EVENT HISTORY & RECOMMENDED ACTION</h4>
+                </div>
+                <span class="badge-neutral" id="failedAttemptCounter">15/15 Attempts Logged</span>
+              </div>
+
+              <p class="text-sm text-muted" style="margin-bottom: 0.5rem;">Chronological login probe sequence (Rapid 42-second burst):</p>
+              <div class="timeline-list" id="challengeTimelineList">
+                <!-- Injected via JS -->
+              </div>
+
+              <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(255, 167, 38, 0.08); border-left: 3px solid var(--accent-amber); border-radius: 4px;">
+                <strong style="color: var(--accent-amber); font-size: 0.78rem;">Recommended Action:</strong>
+                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem;">
+                  Immediately drop source IP at the airport WAF perimeter, isolate the physical switch port at Gate C-12, lock Capt. Chen's credentials, and enforce MFA biometric re-verification.
+                </p>
+              </div>
+            </div>
+
+            <!-- 3. Access/Network Control to Stop Further Attempts -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <span class="badge-tier tier-pnr" style="background: rgba(0, 229, 190, 0.15); color: var(--accent-teal); border-color: var(--accent-teal);">REQUIREMENT #3</span>
+                  <h4 class="panel-title mt-1">ACTIVE ACCESS & NETWORK CONTROLS</h4>
+                </div>
+                <span class="badge-safe" id="defenseStateBadge">Controls Ready</span>
+              </div>
+
+              <div class="control-action-card">
+                <div class="control-status-indicator">
+                  <span>WAF Firewall Drop Rule (IP: 192.168.42.88):</span>
+                  <strong id="wafStatusText" style="color: var(--accent-danger);">PENDING ENFORCEMENT</strong>
+                </div>
+                <div class="control-status-indicator">
+                  <span>Ethernet Switch Port Gi1/0/14 (Gate C-12):</span>
+                  <strong id="portStatusText" style="color: var(--accent-danger);">ONLINE (EXPOSED)</strong>
+                </div>
+                <div class="control-status-indicator">
+                  <span>Affected Account Status (capt.chen):</span>
+                  <strong id="accountLockText" style="color: var(--accent-amber);">ACTIVE (UNDER ATTACK)</strong>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                  <button id="enforceControlsBtn" class="btn btn-danger btn-sm">
+                    <svg class="icon" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Enforce Complete Defense (Block IP, Disable Port & Lock Account)
+                  </button>
+                  <button id="resetControlsBtn" class="btn btn-ghost btn-sm">Reset Response State</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Incident Record for Investigation -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <span class="badge-tier tier-pnr" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border-color: var(--accent-blue);">REQUIREMENT #4</span>
+                  <h4 class="panel-title mt-1">INCIDENT RECORD FOR INVESTIGATION</h4>
+                </div>
+                <span class="badge-neutral">SIEM Case #INC-2026-9938</span>
+              </div>
+
+              <div class="threat-meta-box">
+                <div class="meta-row">
+                  <span class="meta-key">Case Reference:</span>
+                  <span class="meta-val" style="color: var(--accent-cyan);">INC-2026-9938-BRUTE</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Forensic Audit Vault:</span>
+                  <span class="meta-val">Recorded & Cryptographically Sealed</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">FAA/TSA Regulatory Flag:</span>
+                  <span class="meta-val" style="color: var(--accent-amber);">Mandatory 24h Disclosure</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-key">Investigating Unit:</span>
+                  <span class="meta-val">AeroShield Cyber SOC Team 2</span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                <button id="downloadForensicDossierBtn" class="btn btn-primary btn-sm" style="flex: 1;">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Export Forensic JSON Dossier
+                </button>
+                <button id="viewChallengeAuditBtn" class="btn btn-ghost btn-sm">Inspect in Audit Trail</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 6 Note: "Explain what a real system would need to enforce" -->
+          <div class="real-system-box">
+            <h4 class="real-system-title">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="12" r="3"/></svg>
+              ACADEMIC PRESENTATION NOTE: WHAT A REAL AIRPORT SYSTEM WOULD ENFORCE
+            </h4>
+            <p class="text-sm text-secondary">
+              While prototype actions are simulated in this laboratory challenge, a production airport database environment (FAA NextGen & ICAO standards) requires four automated enforcement tiers:
+            </p>
+
+            <div class="real-system-grid">
+              <div class="real-system-item">
+                <h5>1. PAM Account Lockout & Exponential Backoff</h5>
+                <p>Enterprise IAM (Active Directory / Okta / FreeIPA) enforces progressive delays: 3 failed attempts prompt a 60-second backoff; 5 failed attempts lock the account for 15 minutes and alert the SOC.</p>
+              </div>
+
+              <div class="real-system-item">
+                <h5>2. Dynamic WAF Rate Limiting (Token Bucket)</h5>
+                <p>Air-Shield WAF tracks ingress query velocities. Any client exceeding 10 authentication requests per minute has its IP dynamically dropped via iptables/eBPF kernel filtering before hitting the database listener.</p>
+              </div>
+
+              <div class="real-system-item">
+                <h5>3. IEEE 802.1X Port Security & NAC Quarantine</h5>
+                <p>Cisco ISE or Aruba ClearPass monitors physical switch ports. When an unauthorized device MAC is detected, switch port Gi1/0/14 is automatically moved to an isolated quarantine VLAN (VLAN 999) with zero database routes.</p>
+              </div>
+
+              <div class="real-system-item">
+                <h5>4. SIEM Automated SOAR Playbook Execution</h5>
+                <p>Splunk / Elastic Security correlates the 15 authentication failures into a single P1 Incident, automatically invalidates all active session tokens, and dispatches an armed airport security officer to Gate C-12.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             SUBMISSION & PRESENTATION GUIDE (Slide 7 Requirements)
+             =================================================================== -->
+        <section id="section-submission-guide" class="dashboard-section">
+          <div class="panel-card highlight-border">
+            <div class="panel-header">
+              <div>
+                <span class="badge-new">RUBRIC • 100 POINTS</span>
+                <h3 class="panel-title mt-1">IT 414 PROJECT SUBMISSION & DEFENSE GUIDE</h3>
+                <p class="panel-subtitle">Everything needed for your 5–7 minute group presentation, design rationale, and grading rubric</p>
+              </div>
+              <button id="printDefenseDocBtn" class="btn btn-ghost btn-sm">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Print / Save Defense PDF
+              </button>
+            </div>
+
+            <!-- 100 Point Rubric Tracker Matching Slide 7 -->
+            <div class="rubric-card-grid">
+              <div class="rubric-score-box perfect">
+                <span class="priv-label">CREATIVITY & ORIGINALITY</span>
+                <span class="rubric-pts text-teal">30 / 30 pts</span>
+                <span class="text-sm text-secondary">Unique AeroShield cockpit brand, Least-Privilege Scanner, SVG Airport Map, Emergency Cyber Lockdown.</span>
+              </div>
+
+              <div class="rubric-score-box perfect">
+                <span class="priv-label">UI / UX DESIGN</span>
+                <span class="rubric-pts text-blue">20 / 20 pts</span>
+                <span class="text-sm text-secondary">High-contrast cockpit dark mode, Slide 1 chart recreation, responsive tables, real-time feedback.</span>
+              </div>
+
+              <div class="rubric-score-box perfect">
+                <span class="priv-label">SECURITY CONCEPTS</span>
+                <span class="rubric-pts text-cyan">20 / 20 pts</span>
+                <span class="text-sm text-secondary">RBAC clearance tiers, mTLS device authentication, immutable audit logging, WAF rule engine.</span>
+              </div>
+
+              <div class="rubric-score-box perfect">
+                <span class="priv-label">FUNCTIONALITY</span>
+                <span class="rubric-pts text-teal">15 / 15 pts</span>
+                <span class="text-sm text-secondary">8+ live interactions, filters, threat mitigation, CSV audit export, state reset.</span>
+              </div>
+
+              <div class="rubric-score-box perfect">
+                <span class="priv-label">AVIATION RELEVANCE</span>
+                <span class="rubric-pts text-amber">10 / 10 pts</span>
+                <span class="text-sm text-secondary">Realistic airport DB schemas: PNR, Flight Dispatch, ATC Telemetry, Baggage Balance.</span>
+              </div>
+
+              <div class="rubric-score-box perfect">
+                <span class="priv-label">PRESENTATION & CONTRIBUTION</span>
+                <span class="rubric-pts text-teal">5 / 5 pts</span>
+                <span class="text-sm text-secondary">Built-in 5-7 minute presentation script & individual reflection templates ready to present.</span>
+              </div>
+            </div>
+
+            <!-- 5-7 Minute Presentation Script -->
+            <div class="speech-script-box">
+              <h4 style="color: #fff; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem;">
+                🎤 5–7 MINUTE GROUP PRESENTATION SCRIPT (STEP-BY-STEP)
+              </h4>
+              <p class="text-sm text-secondary" style="margin-bottom: 0.75rem;">
+                Follow this exact script during your live defense to hit every rubric criteria smoothly:
+              </p>
+
+              <div class="script-minute-row">
+                <div class="script-minute-tag">MINUTE 0-1</div>
+                <div>
+                  <strong style="color: #fff;">Hook & Problem Statement:</strong>
+                  <p class="text-sm text-secondary">"Good day, Professor and classmates. Airport IT admins face a critical dilemma: airport databases like Passenger PNR, Flight Dispatch, and ATC telemetry are highly targeted, but security tools are fragmented. We built <strong>AeroShield</strong> to unify identity, network protection, and threat monitoring into one actionable cockpit."</p>
+                </div>
+              </div>
+
+              <div class="script-minute-row">
+                <div class="script-minute-tag">MINUTE 1-2</div>
+                <div>
+                  <strong style="color: #fff;">Section 1: Security Overview & Metrics:</strong>
+                  <p class="text-sm text-secondary">"In Section 1, we show 128 active DB users, 17 blocked queries, and 4 open alerts. The access activity chart replicates real airport traffic surges during peak morning flights and flags anomalous night-shift spikes."</p>
+                </div>
+              </div>
+
+              <div class="script-minute-row">
+                <div class="script-minute-tag">MINUTE 2-3</div>
+                <div>
+                  <strong style="color: #fff;">Section 2 & 3: IAM Clearance Tiers & Network Zones:</strong>
+                  <p class="text-sm text-secondary">"In Section 2, we enforce a 3-tier clearance model (Tier 1 Airside Secret for ATC, Tier 2 PNR for TSA/Customs, Tier 3 Operations for Ramp). In Section 3, our network is segregated into 4 VLANs with mTLS certificates tied to physical gate terminals."</p>
+                </div>
+              </div>
+
+              <div class="script-minute-row">
+                <div class="script-minute-tag">MINUTE 3-4</div>
+                <div>
+                  <strong style="color: #fff;">Surprise Challenge: 15 Failed Logins Response (Live Demo):</strong>
+                  <p class="text-sm text-secondary">"Now, we demonstrate our response to the <strong>Surprise Challenge: 15 Failed Logins</strong>. We show the affected account (Capt. Chen), the brute-force timeline at Gate C-12, and click <em>'Enforce Complete Defense'</em> to instantly drop the IP, disable the physical switch port, and lock the account."</p>
+                </div>
+              </div>
+
+              <div class="script-minute-row">
+                <div class="script-minute-tag">MINUTE 4-5</div>
+                <div>
+                  <strong style="color: #fff;">Original Features: Least-Privilege & Airport Map:</strong>
+                  <p class="text-sm text-secondary">"Beyond the requirements, we built two original innovations: our <em>Least-Privilege Engine</em> detected that Ramp Lead David Kim had unneeded Passenger PII read access, which we remediate with 1 click. And our <em>Interactive Airport Map</em> shows live physical zone telemetry."</p>
+                </div>
+              </div>
+
+              <div class="script-minute-row">
+                <div class="script-minute-tag">MINUTE 5-6</div>
+                <div>
+                  <strong style="color: #fff;">Audit Trail, CSV Export & Emergency Lockdown:</strong>
+                  <p class="text-sm text-secondary">"Every action is immutably logged in Section 5 with one-click CSV export for FAA compliance. If an attack escalates, our top <em>Emergency Lockdown</em> button quarantines the landside while preserving life-safety ATC systems."</p>
+                </div>
+              </div>
+
+              <div class="script-minute-row">
+                <div class="script-minute-tag">MINUTE 6-7</div>
+                <div>
+                  <strong style="color: #fff;">Conclusion & Individual Reflection:</strong>
+                  <p class="text-sm text-secondary">"In conclusion, AeroShield proves that aviation database administration is not just about writing SQL queries—it is about defense-in-depth, least-privilege, and situational awareness. We welcome your questions."</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Design Rationale & Reflection Template -->
+            <div class="grid-2-col mt-4">
+              <div class="panel-card">
+                <h4 class="panel-title-sm">SHORT DESIGN RATIONALE</h4>
+                <ul class="text-sm text-secondary" style="margin-top: 0.5rem; line-height: 1.6; padding-left: 1.25rem;">
+                  <li><strong>Color Psychology:</strong> Navy (`#0A1128`) minimizes eye fatigue during 24/7 air traffic shifts; cyan accents highlight safe telemetry; coral red immediately alerts to critical perimeter breaches.</li>
+                  <li><strong>Visual Hierarchy:</strong> Core metrics at the top, followed by actionable charts and urgent alert widgets.</li>
+                  <li><strong>Defense-in-Depth:</strong> Security isn't just a database password—it spans mTLS hardware tokens, VLAN routing, WAF inspection, and RBAC table grants.</li>
+                </ul>
+              </div>
+
+              <div class="panel-card">
+                <h4 class="panel-title-sm">INDIVIDUAL REFLECTION TEMPLATE</h4>
+                <div style="background: var(--bg-secondary); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; margin-top: 0.5rem;">
+                  <p><em>"Working on AeroShield deepened my understanding of how database administration directly intersects with physical airport security. Implementing the 15 Failed Logins response taught me that an effective DBA must collaborate with network engineers to coordinate IP blocking and switch port isolation before database data is exfiltrated."</em></p>
+                </div>
               </div>
             </div>
           </div>

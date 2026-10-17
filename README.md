@@ -93,21 +93,35 @@ To demonstrate the working prototype to an instructor or panel:
      * The Audit Log logs the `DENIED` violation and the corresponding administrative remediation.
      * The Airport Zone Map updates the beacon to isolated status.
 
-2. **Least-Privilege Remediation Demonstration:**
+2. **Surprise Challenge Demonstration (15 Failed Logins - Slide 6):**
+   * Click **"Surprise Challenge (15 Logins)"** in the top banner or select **"15 Failed Logins Response"** in the sidebar.
+   * Observe all 4 required components:
+     1. **Alert Severity & Affected Account:** `CRITICAL` alert affecting `capt.chen` (`flight_dispatch_master`) originating from Gate C-12 Public Terminal (IP: 192.168.42.88).
+     2. **Event History & Recommended Action:** Chronological 15-attempt brute-force probe timeline with recommended perimeter WAF drop and port shutdown.
+     3. **Active Access/Network Controls:** Click **"Enforce Complete Defense"** to immediately drop IP 192.168.42.88, disable physical switch port `Gi1/0/14`, and lock the account.
+     4. **Forensic Record for Investigation:** Click **"Export Forensic JSON Dossier"** to generate the official incident report file.
+   * Review the real-system enforcement notes (PAM lockout, WAF token-bucket rate limiting, 802.1X port security, SIEM/SOAR playbooks).
+
+3. **Least-Privilege Remediation Demonstration:**
    * Navigate to **Least-Privilege Engine** in the sidebar.
    * View the detected excessive grant on `passenger_manifest_pnr`.
    * Click **"Revoke Excessive Grant"** to see compliance reach 100%.
 
-3. **Audit Trail Inspection & CSV Export:**
+4. **Audit Trail Inspection & CSV Export:**
    * Navigate to **5. Audit Logs**.
    * Use the filter dropdown to view only **DENIED** events.
    * Click **"Export Audit CSV"** to download the official audit log file.
 
-4. **Emergency Lockdown Demonstration:**
+5. **5–7 Minute Defense Guide & 100-Point Rubric (Slide 7):**
+   * Navigate to **Presentation & Rubric** in the sidebar.
+   * Review the minute-by-minute speech script for your group, short design rationale, and rubric self-assessment (30 pts Creativity, 20 pts UI/UX, 20 pts Security Concepts, 15 pts Functionality, 10 pts Aviation Relevance, 5 pts Presentation).
+   * Click **"Print / Save Defense PDF"** to produce documentation for grading.
+
+6. **Emergency Lockdown Demonstration:**
    * Click **"Emergency Lockdown"** in the top banner to simulate a DEFCON-1 airport cyber response.
    * Click **"Lift Lockdown"** to restore normal flight operations.
 
-5. **Reset Demo:**
+7. **Reset Demo:**
    * Click **"Reset Demo"** in the top right at any time to return the dashboard to its initial clean presentation state.
 
 ---
