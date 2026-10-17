@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroShield • Aviation Database Security Dashboard (IT 414)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-aeroshield">
+  <!-- Top Simulated Environment Banner (Slide 5 Requirement) -->
+  <aside class="simulation-banner" role="status">
+    <div class="banner-inner">
+      <div class="banner-left">
+        <span class="pulse-indicator"></span>
+        <span class="sim-badge">SIMULATED ENVIRONMENT</span>
+        <span class="sim-desc">IT 414 • Aviation Database Administration | Academic Prototype</span>
+      </div>
+      <div class="banner-right">
+        <button id="scenarioBtn" class="btn btn-warning-soft btn-sm" title="Trigger access violation walkthrough">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Simulate Access Violation
+        </button>
+        <button id="lockdownToggleBtn" class="btn btn-danger-soft btn-sm" title="Engage airport-wide database lockdown">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span id="lockdownBtnText">Emergency Lockdown</span>
+        </button>
+        <button id="resetDemoBtn" class="btn btn-ghost btn-sm" title="Reset all data to initial state">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset Demo
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Emergency Lockdown Active HUD Alert -->
+  <div id="lockdownAlertBanner" class="lockdown-alert hidden">
+    <div class="lockdown-content">
+      <div class="lockdown-icon-wrap">
+        <span class="lockdown-beacon"></span>
+        <svg class="icon-lg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <h4 class="lockdown-title">DEFCON-1 CYBER LOCKDOWN ACTIVE</h4>
+        <p class="lockdown-subtitle">Non-critical landside database connections quarantined. Flight Dispatch & ATC safety databases set to read-only replica failover.</p>
+      </div>
+      <button id="deactivateLockdownBtn" class="btn btn-danger btn-sm">Lift Lockdown</button>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="brand-container">
+        <div class="brand-logo">
+          <svg viewBox="0 0 36 36" class="brand-svg">
+            <defs>
+              <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00F2FE" />
+                <stop offset="100%" stop-color="#0072FF" />
+              </linearGradient>
+            </defs>
+            <path d="M18 3L4 9v9c0 10 7 14 14 15 7-1 14-5 14-15V9L18 3z" fill="none" stroke="url(#shieldGrad)" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Aviation Jet Wings Inside Shield -->
+            <path d="M18 10l-6 8h4v6h4v-6h4l-6-8z" fill="#00E5BE"/>
+            <circle cx="18" cy="18" r="1.5" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">AeroShield</h1>
+          <span class="brand-sub">AVIATION DB SECURITY</span>
+        </div>
+      </div>
+
+      <div class="facility-chip">
+        <div class="facility-icon">
+          <svg class="icon-xs" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <div class="facility-meta">
+          <span class="facility-code">KORD • TERMINAL OPS</span>
+          <span class="facility-name">Metro International Airport</span>
+        </div>
+      </div>
+
+      <!-- Five Required Sections Navigation -->
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <div class="nav-group-label">CORE SECURITY (REQUIRED)</div>
+        <button class="nav-item active" data-section="overview">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span class="nav-label">1. Security Overview</span>
+          <span class="nav-badge alert-count" id="badgeOverviewAlerts">4</span>
+        </button>
+
+        <button class="nav-item" data-section="identity">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="nav-label">2. Identity & Access</span>
+          <span class="nav-badge risk-count" id="badgeRiskyUsers">2</span>
+        </button>
+
+        <button class="nav-item" data-section="network">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="nav-label">3. Network Protection</span>
+          <span class="nav-badge zone-count">4 Zones</span>
+        </button>
+
+        <button class="nav-item" data-section="threats">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="nav-label">4. Threat Monitoring</span>
+          <span class="nav-badge threat-count" id="badgeOpenThreats">4</span>
+        </button>
+
+        <button class="nav-item" data-section="audit">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span class="nav-label">5. Audit Logs</span>
+          <span class="nav-badge log-count" id="badgeLogCount">48</span>
+        </button>
+
+        <div class="nav-group-label" style="margin-top: 1.25rem;">ORIGINAL INNOVATIONS</div>
+        <button class="nav-item" data-section="privileges">
+          <svg class="nav-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="nav-label">Least-Privilege Engine</span>
+          <span class="nav-pill-new">NEW</span>
+        </button>
+
+        <button class="nav-item" data-section="airport-map">
+          <svg class="nav-icon" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          <span class="nav-label">Airport Zone Matrix</span>
+          <span class="nav-pill-new">NEW</span>
+        </button>
+      </nav>
+
+      <!-- Database Cluster Pulse -->
+      <div class="cluster-card">
+        <div class="cluster-header">
+          <span class="cluster-title">ORACLE / POSTGRES CLUSTER</span>
+          <span class="status-dot green"></span>
+        </div>
+        <div class="cluster-grid">
+          <div class="cluster-item">
+            <span class="cluster-label">FLIGHT DISPATCH</span>
+            <span class="cluster-val text-cyan">ONLINE (0.4ms)</span>
+          </div>
+          <div class="cluster-item">
+            <span class="cluster-label">PASSENGER PNR</span>
+            <span class="cluster-val text-amber">QUERY SPIKE</span>
+          </div>
+          <div class="cluster-item">
+            <span class="cluster-label">ATC TELEMETRY</span>
+            <span class="cluster-val text-cyan">ENCRYPTED</span>
+          </div>
+          <div class="cluster-item">
+            <span class="cluster-label">BAGGAGE RECON</span>
+            <span class="cluster-val text-cyan">SYNCED</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Profile Footprint -->
+      <div class="sidebar-user">
+        <div class="user-avatar-wrap">
+          <span class="user-avatar">JD</span>
+          <span class="user-status-online"></span>
+        </div>
+        <div class="user-info">
+          <div class="user-name">J. Doe (Admin)</div>
+          <div class="user-role">Aviation DB Admin • IT 414</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Viewport -->
+    <main class="app-main">
+      <!-- Global Top Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <div class="breadcrumb">
+            <span class="bc-root">AEROSHIELD</span>
+            <span class="bc-sep">/</span>
+            <span class="bc-active" id="breadcrumbSection">SECURITY OVERVIEW</span>
+          </div>
+          <h2 class="page-title" id="pageTitle">Airport Security Dashboard</h2>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearchInput" placeholder="Search records, table, employee, IP..." aria-label="Global Search">
+          </div>
+
+          <div class="system-clock-chip">
+            <svg class="icon-xs" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="liveUtcClock">03:22:45 UTC</span>
+          </div>
+
+          <button id="quickHelpBtn" class="btn btn-icon" title="View IT 414 Project Specs & Help">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Incident Simulation Walkthrough Banner (Actionable Demo Trigger) -->
+      <div id="violationAlertBox" class="violation-walkthrough-box hidden">
+        <div class="violation-content">
+          <div class="violation-badge">CRITICAL INCIDENT DETECTED</div>
+          <h3 class="violation-heading">Unauthorized Off-Hours Access Attempt to Passenger PII Manifest</h3>
+          <p class="violation-desc">
+            User <strong class="text-white">david.kim (Ramp Services Coordinator)</strong> attempted unauthorized <code class="code-hl">SELECT * FROM passenger_manifest_pnr</code> from an unapproved Wi-Fi device at <strong class="text-white">Gate C-18 Kiosk (IP: 192.168.42.88)</strong> at 03:19 UTC.
+          </p>
+          <div class="violation-actions">
+            <button id="mitigateViolationBtn" class="btn btn-danger btn-sm">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Execute Mitigation (Quarantine IP & Revoke Role)
+            </button>
+            <button id="viewViolationLogBtn" class="btn btn-ghost btn-sm">Inspect in Audit Logs</button>
+            <button id="dismissViolationBtn" class="btn btn-ghost-danger btn-sm">Dismiss</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTIONS CONTAINER -->
+      <div class="section-viewport">
+
+        <!-- ===================================================================
+             1. SECURITY OVERVIEW (Matches Slide 1 Layout & Slide 3 Requirements)
+             =================================================================== -->
+        <section id="section-overview" class="dashboard-section active">
+          <!-- Slide 1 Top Metric Cards (Users: 128, Alerts: 04, Blocked: 17) -->
+          <div class="metric-cards-grid">
+            <div class="metric-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">USERS</span>
+                <span class="metric-trend text-cyan">Active DB Users</span>
+              </div>
+              <div class="metric-value" id="statUsers">128</div>
+              <div class="metric-sub">
+                <span class="dot-online"></span> 82 Active Sessions
+              </div>
+            </div>
+
+            <div class="metric-card alert-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">ALERTS</span>
+                <span class="metric-trend text-danger">Requires Action</span>
+              </div>
+              <div class="metric-value text-danger" id="statAlerts">04</div>
+              <div class="metric-sub">
+                <span class="badge-alert-urgent">1 High Priority</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">BLOCKED</span>
+                <span class="metric-trend text-teal">Past 24 Hours</span>
+              </div>
+              <div class="metric-value" id="statBlocked">17</div>
+              <div class="metric-sub">
+                <span>Prevented Unauthorized Queries</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">NETWORK INTEGRITY</span>
+                <span class="metric-trend text-emerald">Airside Isolation</span>
+              </div>
+              <div class="metric-value text-teal" id="statIntegrity">99.8%</div>
+              <div class="metric-sub">
+                <span>0 Leaks Detected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Overview Split: Access Activity Chart + High Priority Callout (Slide 1) -->
+          <div class="overview-body-grid">
+            <!-- Left: Access Activity Interactive Bar Visualization -->
+            <div class="panel-card chart-panel">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">ACCESS ACTIVITY</h3>
+                  <p class="panel-subtitle">Hourly aviation database queries across Gate Kiosks, Dispatch & Ramp</p>
+                </div>
+                <div class="time-filter-pills">
+                  <button class="pill active" data-chart-period="today">Today (24h)</button>
+                  <button class="pill" data-chart-period="peak">Peak Flights</button>
+                  <button class="pill" data-chart-period="night">Red-Eye Shift</button>
+                </div>
+              </div>
+
+              <!-- Interactive Access Activity Bars (Slide 1 recreation with real interactivity) -->
+              <div class="access-chart-wrapper">
+                <div class="chart-bars-container" id="accessChartContainer">
+                  <!-- Generated via JavaScript with tooltips and selection -->
+                </div>
+                <div class="chart-axis-labels">
+                  <span>00:00</span>
+                  <span>04:00</span>
+                  <span>08:00</span>
+                  <span>12:00</span>
+                  <span>16:00</span>
+                  <span>20:00</span>
+                  <span>23:00</span>
+                </div>
+              </div>
+
+              <div class="chart-legend-row">
+                <div class="legend-item">
+                  <span class="legend-color-box normal"></span>
+                  <span>Normal Flight Query Load</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color-box spike"></span>
+                  <span>Anomalous / Blocked Query Spike</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color-box highlight"></span>
+                  <span>Selected Time Window</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: High Priority Callout (Matching Slide 1) & Security Posture -->
+            <div class="overview-right-column">
+              <!-- Slide 1 High Priority Widget -->
+              <div class="panel-card high-priority-card" id="highPriorityWidget">
+                <div class="priority-header">
+                  <span class="priority-label">HIGH PRIORITY ALERT</span>
+                  <span class="priority-time">Just Now</span>
+                </div>
+                <div class="priority-title" id="highPriorityTitle">15 failed logins • Unknown device</div>
+                <p class="priority-description" id="highPriorityDesc">
+                  Repeated brute-force authentication against <strong class="text-white">flight_dispatch_master</strong> via Gate C-12 Self-Service Kiosk (IP: 192.168.42.88).
+                </p>
+                <div class="priority-actions">
+                  <button class="btn btn-danger btn-sm" id="btnQuickBlockHighPriority">Block IP & Terminal</button>
+                  <button class="btn btn-ghost btn-sm" id="btnQuickInvestigate">Investigate</button>
+                </div>
+              </div>
+
+              <!-- Database Zone Protection Mini Matrix -->
+              <div class="panel-card zone-summary-card">
+                <div class="panel-header">
+                  <h4 class="panel-title-sm">AIRPORT DATABASE ZONES</h4>
+                  <span class="badge-safe">4 Active Zones</span>
+                </div>
+                <div class="zone-list-compact">
+                  <div class="zone-compact-item">
+                    <div class="zone-dot airside"></div>
+                    <div class="zone-compact-info">
+                      <span class="zone-compact-name">Airside Core (ATC & Flight Plan DB)</span>
+                      <span class="zone-compact-rule">Strict Airgap • TLS 1.3 Strict Mutual Auth</span>
+                    </div>
+                    <span class="zone-compact-status safe">SECURE</span>
+                  </div>
+                  <div class="zone-compact-item">
+                    <div class="zone-dot terminal"></div>
+                    <div class="zone-compact-info">
+                      <span class="zone-compact-name">Terminal & Gate Ops (Baggage & PNR)</span>
+                      <span class="zone-compact-rule">VLAN 204 • Multi-Factor Enforced</span>
+                    </div>
+                    <span class="zone-compact-status warning">1 ALERT</span>
+                  </div>
+                  <div class="zone-compact-item">
+                    <div class="zone-dot landside"></div>
+                    <div class="zone-compact-info">
+                      <span class="zone-compact-name">Public Landside (Check-in Kiosks)</span>
+                      <span class="zone-compact-rule">DMZ • WAF Rate Limiting</span>
+                    </div>
+                    <span class="zone-compact-status safe">ONLINE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom: Recent Threat Feed Preview -->
+          <div class="panel-card mt-4">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">LIVE DATABASE ACTIVITY STREAM</h3>
+                <p class="panel-subtitle">Streaming airport database transactions and automated defense responses</p>
+              </div>
+              <button class="btn btn-ghost btn-sm" data-nav-target="threats">View All Threats &rarr;</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Source Entity</th>
+                    <th>Database Target</th>
+                    <th>Query Action</th>
+                    <th>Threat Level</th>
+                    <th>Defense Action</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewLiveTableBody">
+                  <!-- Populated dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             2. IDENTITY & ACCESS (IAM) (Slide 3 Requirement)
+             =================================================================== -->
+        <section id="section-identity" class="dashboard-section">
+          <div class="section-toolbar">
+            <div class="toolbar-left">
+              <div class="filter-group">
+                <label for="iamRoleFilter" class="filter-label">Filter Role:</label>
+                <select id="iamRoleFilter" class="select-control">
+                  <option value="ALL">All Roles</option>
+                  <option value="Flight Dispatcher">Flight Dispatcher</option>
+                  <option value="Air Traffic Controller">Air Traffic Controller</option>
+                  <option value="Ramp Operations Lead">Ramp Operations Lead</option>
+                  <option value="Avionics Database Architect">Avionics Database Architect</option>
+                  <option value="Baggage Handling Supervisor">Baggage Handling Supervisor</option>
+                  <option value="TSA Liaison Officer">TSA Liaison Officer</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="iamStatusFilter" class="filter-label">Account Status:</label>
+                <select id="iamStatusFilter" class="select-control">
+                  <option value="ALL">All Statuses</option>
+                  <option value="Active">Active</option>
+                  <option value="Flagged">Flagged / Overprivileged</option>
+                  <option value="Suspended">Suspended</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="toolbar-right">
+              <button id="addStaffModalBtn" class="btn btn-primary btn-sm">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Provision Aviation Staff
+              </button>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">AIRPORT EMPLOYEE DIRECTORY & PRIVILEGE MATRIX</h3>
+                <p class="panel-subtitle">Manage role-based access control (RBAC) across aviation operational database tables</p>
+              </div>
+              <span class="badge-neutral" id="iamCountBadge">Showing 8 Employees</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Employee / ID</th>
+                    <th>Department & Role</th>
+                    <th>Security Clearance</th>
+                    <th>Database Permissions</th>
+                    <th>Account Status</th>
+                    <th>Risk Assessment</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="iamTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Role Definitions & Clearance Guide -->
+          <div class="grid-2-col mt-4">
+            <div class="panel-card">
+              <h4 class="panel-title-sm">CLEARANCE TIER DEFINITIONS</h4>
+              <div class="clearance-guide-list mt-3">
+                <div class="clearance-item">
+                  <span class="badge-tier tier-airside">TIER 1 • AIRSIDE SECRET</span>
+                  <p class="text-muted text-sm mt-1">Full ATC telemetry, Flight Dispatch control, and Avionics firmware tables.</p>
+                </div>
+                <div class="clearance-item">
+                  <span class="badge-tier tier-pnr">TIER 2 • PASSENGER PII CONFIDENTIAL</span>
+                  <p class="text-muted text-sm mt-1">Customs/TSA manifest, Passenger Names/Passports, Baggage Weight & Balance.</p>
+                </div>
+                <div class="clearance-item">
+                  <span class="badge-tier tier-ops">TIER 3 • OPERATIONS STANDARD</span>
+                  <p class="text-muted text-sm mt-1">Ground gate assignments, Fuel delivery logging, Ramp scheduling.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <h4 class="panel-title-sm">LEAST-PRIVILEGE COMPLIANCE AUDIT</h4>
+              <div class="compliance-box mt-3">
+                <div class="compliance-metric">
+                  <span class="compliance-pct">87.5%</span>
+                  <span class="compliance-sub">Airport Staff Strict Principle Compliance</span>
+                </div>
+                <p class="text-sm text-muted mt-2">
+                  1 user (<strong class="text-amber">David Kim - Ramp Services</strong>) currently holds unneeded Passenger PII read privileges. Run the <a href="#" class="text-cyan nav-link-inline" data-section="privileges">Least-Privilege Engine</a> to auto-remediate.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             3. NETWORK PROTECTION (Slide 3 Requirement)
+             =================================================================== -->
+        <section id="section-network" class="dashboard-section">
+          <!-- Firewall & Zone Status Overview -->
+          <div class="metric-cards-grid">
+            <div class="metric-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">FIREWALL ENGINE</span>
+                <span class="metric-trend text-emerald">WAF Active</span>
+              </div>
+              <div class="metric-value text-teal">AIR-SHIELD WAF</div>
+              <div class="metric-sub">
+                <span>Inspecting 1,240 queries/sec</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">AUTHORIZED DEVICES</span>
+                <span class="metric-trend text-cyan">84 Hardware Validated</span>
+              </div>
+              <div class="metric-value">84 / 85</div>
+              <div class="metric-sub">
+                <span class="text-danger">1 Device Quarantined</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">DATABASE ZONES</span>
+                <span class="metric-trend text-cyan">4 Segregated VLANs</span>
+              </div>
+              <div class="metric-value">4 ZONES</div>
+              <div class="metric-sub">
+                <span>Airgap Isolation Engaged</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-header">
+                <span class="metric-tag">MUTUAL TLS (mTLS)</span>
+                <span class="metric-trend text-emerald">100% Enforced</span>
+              </div>
+              <div class="metric-value text-teal">STRICT</div>
+              <div class="metric-sub">
+                <span>Certificates auto-rotated</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Authorized Devices & Terminals Table -->
+          <div class="panel-card mt-4">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">AUTHORIZED AIRPORT ENDPOINTS & HARDWARE TOKENS</h3>
+                <p class="panel-subtitle">Airside tablets, Gate Kiosks, Ramp Scanners, and ATC Towers communicating with DB cluster</p>
+              </div>
+              <div class="device-actions">
+                <button id="addDeviceBtn" class="btn btn-ghost btn-sm">+ Register Terminal</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Device Identifier</th>
+                    <th>Hardware Type</th>
+                    <th>Physical Airport Location</th>
+                    <th>Assigned VLAN Zone</th>
+                    <th>IP / MAC Address</th>
+                    <th>mTLS Certificate</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="deviceTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Active Firewall Rules Matrix -->
+          <div class="panel-card mt-4">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">DATABASE ZONE FIREWALL INGRESS / EGRESS RULES</h3>
+                <p class="panel-subtitle">Granular traffic filtering policies safeguarding aviation databases</p>
+              </div>
+              <button id="addRuleBtn" class="btn btn-ghost btn-sm">+ Add Firewall Rule</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Rule ID</th>
+                    <th>Origin Network / Zone</th>
+                    <th>Target Database Zone</th>
+                    <th>Port / Protocol</th>
+                    <th>Allowed Payload Types</th>
+                    <th>State</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="firewallRulesBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             4. THREAT MONITORING (Slide 3 Requirement)
+             =================================================================== -->
+        <section id="section-threats" class="dashboard-section">
+          <div class="section-toolbar">
+            <div class="toolbar-left">
+              <div class="filter-group">
+                <label for="threatSeverityFilter" class="filter-label">Filter Severity:</label>
+                <select id="threatSeverityFilter" class="select-control">
+                  <option value="ALL">All Severities</option>
+                  <option value="CRITICAL">Critical</option>
+                  <option value="HIGH">High</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="LOW">Low</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="threatStatusFilter" class="filter-label">Status:</label>
+                <select id="threatStatusFilter" class="select-control">
+                  <option value="ALL">All Statuses</option>
+                  <option value="OPEN">Open (Requires Response)</option>
+                  <option value="ACKNOWLEDGED">Acknowledged</option>
+                  <option value="MITIGATED">Mitigated / Blocked</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="toolbar-right">
+              <button id="triggerThreatSimBtn" class="btn btn-warning-soft btn-sm">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                Inject Simulated DB Threat
+              </button>
+            </div>
+          </div>
+
+          <div class="threats-grid" id="threatCardsContainer">
+            <!-- Populated via JS: Rich cards with severity, payload details, timeline and response buttons -->
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             5. AUDIT LOGS (Slide 3 Requirement)
+             =================================================================== -->
+        <section id="section-audit" class="dashboard-section">
+          <div class="section-toolbar">
+            <div class="toolbar-left">
+              <div class="filter-group">
+                <label for="auditResultFilter" class="filter-label">Result:</label>
+                <select id="auditResultFilter" class="select-control">
+                  <option value="ALL">All Results (Allowed & Denied)</option>
+                  <option value="ALLOWED">ALLOWED Only</option>
+                  <option value="DENIED">DENIED Only</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="auditTableFilter" class="filter-label">Target Table:</label>
+                <select id="auditTableFilter" class="select-control">
+                  <option value="ALL">All Database Tables</option>
+                  <option value="passenger_manifest_pnr">passenger_manifest_pnr</option>
+                  <option value="flight_dispatch_master">flight_dispatch_master</option>
+                  <option value="atc_radar_telemetry">atc_radar_telemetry</option>
+                  <option value="baggage_weight_balance">baggage_weight_balance</option>
+                  <option value="airside_security_clearance">airside_security_clearance</option>
+                  <option value="jet_fuel_allocation">jet_fuel_allocation</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <input type="text" id="auditSearchInput" class="select-control search-input" placeholder="Search user, action, IP..." style="width: 220px;">
+              </div>
+            </div>
+
+            <div class="toolbar-right">
+              <button id="exportCsvBtn" class="btn btn-ghost btn-sm">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Audit CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">IMMUTABLE AVIATION DATABASE AUDIT TRAIL</h3>
+                <p class="panel-subtitle">Captures Who did What, When, from Where, and Allowed/Denied Result</p>
+              </div>
+              <span class="badge-neutral" id="auditShowingBadge">Showing 48 entries</span>
+            </div>
+
+            <div class="table-responsive log-table-wrap">
+              <table class="data-table log-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp (UTC)</th>
+                    <th>User & ID</th>
+                    <th>Role / Clearance</th>
+                    <th>Target DB Table</th>
+                    <th>SQL Action</th>
+                    <th>IP / Endpoint Location</th>
+                    <th>Result</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody id="auditTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             ORIGINAL FEATURE 1: LEAST-PRIVILEGE & EXCESSIVE PERMISSIONS DETECTOR
+             (Exceeds Requirements - Slide 4)
+             =================================================================== -->
+        <section id="section-privileges" class="dashboard-section">
+          <div class="panel-card highlight-border">
+            <div class="panel-header">
+              <div>
+                <span class="badge-new">ORIGINAL FEATURE #1</span>
+                <h3 class="panel-title mt-1">LEAST-PRIVILEGE & OVERPRIVILEGE SCANNER</h3>
+                <p class="panel-subtitle">Automatically compares assigned DB grants against actual operational job requirements to detect privilege creep</p>
+              </div>
+              <button id="runLeastPrivilegeScanBtn" class="btn btn-primary btn-sm">
+                <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Run Zero-Trust Privilege Scan
+              </button>
+            </div>
+
+            <div class="privilege-summary-grid">
+              <div class="privilege-stat-card warning">
+                <span class="priv-label">EXCESSIVE PERMISSIONS DETECTED</span>
+                <span class="priv-value text-amber" id="excessivePrivCount">1 High Risk</span>
+                <span class="priv-sub">Ramp Lead has unapproved Passenger PII Read</span>
+              </div>
+              <div class="privilege-stat-card safe">
+                <span class="priv-label">CLEAN PROFILES</span>
+                <span class="priv-value text-teal">7 Accounts</span>
+                <span class="priv-sub">Strict least-privilege boundary verified</span>
+              </div>
+              <div class="privilege-stat-card info">
+                <span class="priv-label">PRIVILEGE CREEP INDEX</span>
+                <span class="priv-value text-cyan">Low (12.5%)</span>
+                <span class="priv-sub">Airport average: 28%</span>
+              </div>
+            </div>
+
+            <div class="table-responsive mt-4">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Aviation Role</th>
+                    <th>Legitimate Need</th>
+                    <th>Excessive Unused Grant</th>
+                    <th>Security Risk</th>
+                    <th>Remediation Action</th>
+                  </tr>
+                </thead>
+                <tbody id="privilegeDetectorBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             ORIGINAL FEATURE 2: RESTRICTED AIRPORT NETWORK-ZONE MAP
+             (Exceeds Requirements - Slide 4)
+             =================================================================== -->
+        <section id="section-airport-map" class="dashboard-section">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <span class="badge-new">ORIGINAL FEATURE #2</span>
+                <h3 class="panel-title mt-1">INTERACTIVE RESTRICTED AIRPORT NETWORK-ZONE MAP</h3>
+                <p class="panel-subtitle">Geographic & logical segregation of Airside, Sterile Gate concourse, and Landside DB endpoints</p>
+              </div>
+              <div class="zone-map-legend">
+                <span class="map-legend-item"><span class="legend-pip red"></span> Suspicious Origin</span>
+                <span class="map-legend-item"><span class="legend-pip green"></span> Airside Secure</span>
+                <span class="map-legend-item"><span class="legend-pip blue"></span> Terminal Concourse</span>
+              </div>
+            </div>
+
+            <!-- Interactive SVG Airport Zone Map -->
+            <div class="airport-map-wrapper">
+              <svg viewBox="0 0 960 480" class="airport-svg-map" id="airportZoneSvg">
+                <!-- Airport Runway & Perimeter Backdrop -->
+                <rect x="20" y="20" width="920" height="440" rx="12" fill="#0C162D" stroke="#1E293B" stroke-width="2"/>
+                <path d="M40 80 L920 80" stroke="#1E3A8A" stroke-dasharray="10 10" stroke-width="2"/>
+                <text x="50" y="65" fill="#64748B" font-size="12" font-family="'JetBrains Mono', monospace">RUNWAY 09L / 27R AIRFIELD BUFFER</text>
+
+                <!-- Zone 1: Airside Secure Zone (ATC & Avionics) -->
+                <g class="map-zone" id="mapZoneAirside">
+                  <rect x="50" y="110" width="260" height="320" rx="10" fill="#0E2442" stroke="#00E5BE" stroke-width="2" class="zone-box"/>
+                  <text x="70" y="145" fill="#00E5BE" font-weight="700" font-size="14">ZONE 1: AIRSIDE SECURE</text>
+                  <text x="70" y="165" fill="#94A3B8" font-size="11">ATC Tower • Dispatch Database</text>
+
+                  <!-- Node: ATC Core DB -->
+                  <circle cx="110" cy="220" r="14" fill="#00E5BE" opacity="0.3" class="pulse-node"/>
+                  <circle cx="110" cy="220" r="8" fill="#00E5BE"/>
+                  <text x="135" y="225" fill="#F8FAFC" font-size="12">ATC Telemetry DB</text>
+
+                  <!-- Node: Dispatch -->
+                  <circle cx="110" cy="300" r="8" fill="#00E5BE"/>
+                  <text x="135" y="305" fill="#F8FAFC" font-size="12">Flight Dispatch Master</text>
+
+                  <rect x="70" y="360" width="220" height="45" rx="6" fill="#132B50"/>
+                  <text x="85" y="385" fill="#38BDF8" font-size="11">Status: Air-Gapped & Locked</text>
+                </g>
+
+                <!-- Zone 2: Sterile Concourse & Baggage (VLAN 204) -->
+                <g class="map-zone" id="mapZoneConcourse">
+                  <rect x="350" y="110" width="260" height="320" rx="10" fill="#0E2442" stroke="#38BDF8" stroke-width="2" class="zone-box"/>
+                  <text x="370" y="145" fill="#38BDF8" font-weight="700" font-size="14">ZONE 2: TERMINAL CONCOURSE</text>
+                  <text x="370" y="165" fill="#94A3B8" font-size="11">Gates C1-C24 • Baggage Sorting</text>
+
+                  <!-- Node: Gate C-18 Kiosk (VIOLATION SOURCE) -->
+                  <circle cx="410" cy="220" r="16" fill="#FF4560" opacity="0.4" class="pulse-alert-node" id="gateC18Pulse"/>
+                  <circle cx="410" cy="220" r="8" fill="#FF4560" id="gateC18Node"/>
+                  <text x="435" y="225" fill="#FF8096" font-size="12" font-weight="700">Gate C-18 Kiosk (192.168.42.88)</text>
+
+                  <!-- Node: Baggage Weight DB -->
+                  <circle cx="410" cy="300" r="8" fill="#38BDF8"/>
+                  <text x="435" y="305" fill="#F8FAFC" font-size="12">Baggage Weight/Bal DB</text>
+
+                  <rect x="370" y="360" width="220" height="45" rx="6" fill="#132B50"/>
+                  <text x="385" y="385" fill="#FFA726" font-size="11" id="zone2StatusText">Status: 1 Threat Under Review</text>
+                </g>
+
+                <!-- Zone 3: Landside Public Check-In & DMZ -->
+                <g class="map-zone" id="mapZoneLandside">
+                  <rect x="650" y="110" width="260" height="320" rx="10" fill="#0E2442" stroke="#64748B" stroke-width="2" class="zone-box"/>
+                  <text x="670" y="145" fill="#94A3B8" font-weight="700" font-size="14">ZONE 3: LANDSIDE DMZ</text>
+                  <text x="670" y="165" fill="#64748B" font-size="11">Public Check-In • Web Kiosks</text>
+
+                  <!-- Node: Public Kiosk Cluster -->
+                  <circle cx="710" cy="220" r="8" fill="#64748B"/>
+                  <text x="735" y="225" fill="#F8FAFC" font-size="12">Public Check-In Kiosks</text>
+
+                  <!-- Node: Read-Only Schedule Cache -->
+                  <circle cx="710" cy="300" r="8" fill="#64748B"/>
+                  <text x="735" y="305" fill="#F8FAFC" font-size="12">Public Schedule Cache</text>
+
+                  <rect x="670" y="360" width="220" height="45" rx="6" fill="#132B50"/>
+                  <text x="685" y="385" fill="#10B981" font-size="11">Status: Rate-Limited & Isolated</text>
+                </g>
+
+                <!-- Connection Lines showing isolated conduits -->
+                <path d="M310 220 L350 220" stroke="#1E3A8A" stroke-width="2" stroke-dasharray="4 4"/>
+                <path d="M610 220 L650 220" stroke="#1E3A8A" stroke-width="2" stroke-dasharray="4 4"/>
+              </svg>
+            </div>
+
+            <div class="map-action-bar">
+              <div class="map-action-info">
+                <strong>Selected Node:</strong> <span id="mapSelectedNode">Gate C-18 Self-Service Terminal (Quarantine Recommended)</span>
+              </div>
+              <div class="map-action-btns">
+                <button id="mapQuarantineBtn" class="btn btn-danger btn-sm">Quarantine Gate C-18 Terminal</button>
+                <button id="mapPingBtn" class="btn btn-ghost btn-sm">Ping Node Health</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div> <!-- /section-viewport -->
+
+      <!-- Footer Disclaimer (Slide 5 Requirement) -->
+      <footer class="app-footer">
+        <div class="footer-academic-badge">
+          <span>IT 414 • Aviation Database Administration</span>
+          <span class="footer-sep">•</span>
+          <span>4th Year IT Laboratory Prototype</span>
+          <span class="footer-sep">•</span>
+          <span>AeroShield v1.0</span>
+        </div>
+        <p class="footer-disclaimer">
+          <strong>Academic Safety Disclaimer:</strong> This dashboard is a simulated educational prototype developed for IT 414. All employee names, flight records, IP addresses, and database schemas are entirely fictional. <em>Do not connect to production airport systems or claim simulated controls stop real attacks.</em>
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Global Modal for Details & Actions -->
+  <div id="actionModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Modal Title</h3>
+        <button id="modalCloseBtn" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Injected via JS -->
+      </div>
+      <div class="modal-footer" id="modalFooter">
+        <button class="btn btn-ghost" id="modalCancelBtn">Close</button>
+        <button class="btn btn-primary" id="modalConfirmBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Toaster -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
